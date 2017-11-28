@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Contact;
 use Illuminate\Http\Request;
+use TJWTAuth;
 
 class ContactController extends Controller
 {
 
 
     public function postContact(Request $request){
-
+//           $user = JWTAuth::parseToken()->toUser();
         if ($request->hasFile('name')) {
             $filnameWithExt = $request->file('name')->getClientOriginalName();
 
@@ -68,6 +69,19 @@ class ContactController extends Controller
                   return response() -> json (['message'=> 'Document not found!'],404);
                           }
                           else{
+                              if ($request->hasFile('name')) {
+                                  $filnameWithExt = $request->file('name')->getClientOriginalName();
+
+                                  $filename = pathinfo($filnameWithExt, PATHINFO_FILENAME);
+
+                                  $extension = $request->file('name')->getClientOriginalExtension();
+
+                                  $fileNameToStore = $filename.'_'. time().'.'. $extension;
+
+                                  $path = $request->file('name')->storeAs('/public/contact_images', $fileNameToStore);
+                              } else {
+                                  $fileNameToStore = "noimage.jpg";
+                              }
                             $contact->firstname = $request -> input('firstname');
                             $contact->middlename = $request -> input('middlename');
                             $contact->lastname = $request -> input('lastname');
@@ -85,6 +99,7 @@ class ContactController extends Controller
                             $contact->synod = $request -> input('synod');
                             $contact->cong = $request -> input('cong');
                             $contact->occupation = $request -> input('occupation');
+                              $contact ->name = $fileNameToStore;
                            $contact-> save();
                           return response() ->json(['contact'=> $contact,200]);
                           }

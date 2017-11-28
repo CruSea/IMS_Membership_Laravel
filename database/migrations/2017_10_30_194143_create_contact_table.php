@@ -17,7 +17,7 @@ class CreateContactTable extends Migration
             $table->increments('id');
             $table->text('firstname');
             $table->text('middlename');
-            $table->text('lastname');`
+            $table->text('lastname');
             $table->text('sex')-> nullable();
             $table->text('age')-> nullable();
             $table->text('region')-> nullable();
