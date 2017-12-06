@@ -8,7 +8,10 @@ use TJWTAuth;
 
 class ContactController extends Controller
 {
-
+    public function  __construct(){
+        $this->middleware('is_Admin',['except'=>['getContact','postContact','deleteContact','putContact']]);
+        $this->middleware('is_Editor',['except'=>['getContact']]);
+    }
 
     public function postContact(Request $request){
 //           $user = JWTAuth::parseToken()->toUser();

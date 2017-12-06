@@ -60,6 +60,10 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'auth.jwt' => \Tymon\JWTAuth\Middleware\GetUserFromToken::class
+        'auth.jwt' => \Tymon\JWTAuth\Middleware\GetUserFromToken::class,
+        'is_Admin' => \App\Http\Middleware\is_Admin::class,
+        'is_Editor' => \App\Http\Middleware\is_Editor::class,
+        'is_Viewer' => \App\Http\Middleware\is_Viewer::class
+
     ];
 }

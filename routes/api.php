@@ -20,6 +20,12 @@ use Illuminate\Http\Request;
             Route:: post('/signin',[
                 'uses' => 'UserController@signUserIn'
             ]);
+            Route:: put('/status/{id}',[
+                'uses' => 'UserController@status'
+            ]);
+            Route:: get('/signup',[
+                'uses' => 'UserController@getRole'
+            ]);
 
 //routes for user registering
             Route:: post('/signup',[
@@ -27,6 +33,7 @@ use Illuminate\Http\Request;
             ]);
             Route:: get('/signup',[
                 'uses' => 'UserController@getUser'
+
             ]);
             Route:: put('/signup/{id}',[
                 'uses' => 'UserController@updateUser'
@@ -53,6 +60,7 @@ use Illuminate\Http\Request;
                 ]);
                 Route:: get('/Contact-group',[
                     'uses' => 'ContactGroupController@getContactGroup'
+
                 ]);
                 Route:: delete('/Contact-group/{id}',[
                     'uses' => 'ContactGroupController@deleteContactGroup'
@@ -70,7 +78,8 @@ use Illuminate\Http\Request;
                     'uses' => 'groupDetailController@contactList'
                 ]);
                 Route:: get('/Contact-detail/{group_id}', [
-                    'uses' => 'groupDetailController@showGroup'
+                    'uses' => 'groupDetailController@showGroup',
+                    'middleware'=>'is_Viewer'
                 ]);
                 Route:: delete('/Contact-detail/{contact_id}', [
                     'uses' => 'groupDetailController@removeContact'

@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class GroupDetailController extends Controller
 {
+    public function  __construct(){
+        $this->middleware('is_Admin',['except'=>['addToGroup','contactList','showGroup','removeContact']]);
+        $this->middleware('is_Editor',['except'=>['showGroup']]);
+    }
 // Get Contact lists
       public function addToGroup( Request $request, $group_id, $contact_id){
                      $group = ContactGroup::find($group_id)->first();

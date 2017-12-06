@@ -7,6 +7,11 @@ use App\groupDetail;
 use App\ContactGroup;
 class ContactGroupController extends Controller
 {
+
+    public function  __construct(){
+        $this->middleware('is_Admin',['except'=>['postContactGroup','getContactGroup','deleteContactGroup']]);
+        $this->middleware('is_Editor',['except'=>['getContactGroup']]);
+    }
     public function postContactGroup(Request $request){
         $contactgroup = new ContactGroup();
         $contactgroup->groupname = $request -> input('groupname');

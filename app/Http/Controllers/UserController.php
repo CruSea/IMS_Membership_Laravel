@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\UserRole;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use JWTAuth;
 
 class UserController extends Controller
 {
-
+            public function  __construct(){
+                  $this->middleware('is_Admin',['except'=>['signUserIn','getUser']]);
+            }
    public function sign_user_up(Request $request){
 
 
@@ -20,7 +23,7 @@ class UserController extends Controller
                              'email'=> 'required|email|unique:users',
                              'password'=>'required',
                              'phonenumber'=>'required',
-                             'user_privilage'=>'required'
+                             'role_id'=>'required'
                    ]);
                           $account_status = 0;
                       $user = new User([
@@ -30,7 +33,7 @@ class UserController extends Controller
                             'email' => $request->input('email'),
                             'password' =>bcrypt($request->input('password')),
                             'phonenumber' => $request->input('phonenumber'),
-                            'user_privilage' =>$request-> input('user_privilage'),
+                            'role_id' =>$request->input('role_id'),
                             'Account_status' =>$account_status
                    ]);
                    $user-> save();
@@ -84,7 +87,7 @@ class UserController extends Controller
                   $user->email = $request->input('email');
                   $user->password = bcrypt($request->input('password'));
                   $user->phonenumber = $request->input('phonenumber');
-                  $user->user_privilage = $request->input('user_privilage');
+                  $user->role_id = $request->input('role_id');
                   $user->Account_status = $account_status;
 
                   $user->save();
@@ -94,7 +97,47 @@ class UserController extends Controller
               }
 
 
-   }
 
+
+   }
+          public function status(Request $request , $id){
+              $user = User::find($id);
+
+              if(!$user instanceof User){
+
+                  return response()->json(['message'=>'Document not found'],404);
+              } else
+              {
+                  if($user->Account_status == 0){
+                      $account_status = 1;
+                  }else{
+                      $account_status = 0;
+                  }
+                  $user-> fullname = $request->fullname;
+                  $user->username =$request-> username;
+                  $user->email =$request-> email;
+                  $user->password = $request->password;
+                  $user->phonenumber = $request->phonenumber;
+                  $user->role_id =  $request->role_id;
+                  $user->Account_status = $account_status;
+
+                  $user->save();
+
+                  return response()->json(['user'=>$user],200);
+
+              }
+
+
+
+          }
+
+          public function getRole(){
+              $role = UserRole::all();
+
+              $response = [
+                  'roles' => $role
+              ];
+              return response()->json($response ,200);
+          }
 
 }
