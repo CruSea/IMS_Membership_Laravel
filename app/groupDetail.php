@@ -12,6 +12,9 @@ class groupDetail extends Model
 //        return $this->hasMany(Contact::class, 'contact_id');
 //
 //    }
+//    public  function group(){
+//        return $this->belongsTo(groupDetail::class );
+//    }
     public  function contact(){
         return $this->belongsTo(Contact::class, 'contact_id');
     }

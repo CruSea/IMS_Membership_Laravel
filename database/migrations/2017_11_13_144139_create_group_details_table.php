@@ -19,6 +19,7 @@ class CreateGroupDetailsTable extends Migration
             $table->foreign('group_id')-> references('id')->on('contact_groups')-> onDelete("cascade");
             $table->integer('contact_id')-> unsigned();
             $table->foreign('contact_id')-> references('id')->on('contacts')-> onDelete("cascade");
+            $table->unique(['group_id','contact_id']);
         });
     }
 

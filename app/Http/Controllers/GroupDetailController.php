@@ -18,32 +18,51 @@ class GroupDetailController extends Controller
                      $group = ContactGroup::find($group_id)->first();
                      $contact = Contact::find($contact_id)->first();
                  if(!$contact && !$group){
-                     return response()->json(['message' , 'failed to load data'], 404);
+                     return response()->json(['message' , 'Data not Found!!'], 404);
                                          }
                      $groups = new groupDetail;
                      $groups->group_id = $request-> group_id;
                      $groups->contact_id = $request-> contact_id;
-                     $groups->save();
-                     return response()->json(['group', $groups], 201);}
+
+                 $groups->save();
+                 return response()->json(['group', $groups], 201);
+
+                  }
 // load contact list
-      public  function  contactList(){
-                     $contactlists = Contact::all();
+      public  function  contactList($group_id){
+          $contacts = Contact::whereNotIn('id',groupDetail::where('group_id','=', $group_id)->select('contact_id')->get() )->orderBy('id','DESC')->paginate(5);
+
+
                      $response=[
-                     'contactlists'=>$contactlists
+                     'contact_lists'=>$contacts
                                ];
                      return response() ->json($response,200);
+
+
+//                     $contactlists = Contact::orderBy('id','DESC')->paginate(10);
+//                     $response=[
+//                     'contactlists'=>$contactlists
+//                               ];
+//                     return response() ->json($response,200);
+
+
                                }
       public  function showGroup( $group_id){
-                      $showcontact = groupDetail::with('contact')->where('group_id',$group_id)->get();
+                      $showcontact = groupDetail::with('contact')->where('group_id',$group_id)->paginate(5);
+
+                     $count = count($showcontact);
                       $response=[
-                          'groupmembers'=>$showcontact
+                          'members'=>$showcontact,
+                          'count'=> $count
                                 ];
                       return response() ->json($response,200);
 
                         }
-       public  function  removeContact($contact_id){
-                      $contactToDelete = groupDetail:: find($contact_id);
-                      $contactToDelete-> delete();
-                      return response() ->json(['message' => ' Contact removed' ], 201);
+       public  function  removeContact($id){
+                      $contactToDelete = groupDetail::find($id);
+                      $contactToDelete -> delete();
+                      return response()->json(['message' => 'Contact removed' ], 200);
        }
+
+
 }

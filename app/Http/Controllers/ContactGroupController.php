@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\groupDetail;
+use Illuminate\Http\Request;
 use App\ContactGroup;
 class ContactGroupController extends Controller
 {
@@ -22,12 +22,22 @@ class ContactGroupController extends Controller
     }
 
     public function getContactGroup(){
+
         $contactgroup = ContactGroup::all();
+
+//        $contacts = groupDetail::whereIn('group_id',$contactgroup->id)->select('contact_id')->get();
+//
+//        $count = count($contacts);
+
         $response=[
             'contactgroup'=>$contactgroup
         ];
         return response() ->json($response,200);
     }
+//    public function group_contact_count(){
+//         $contact_count = groupDetail::all();
+//         return $contact_count->count();
+//    }
     public function deleteContactGroup($id){
         $contactgroup = ContactGroup:: find($id);
         $contactgroup -> delete();

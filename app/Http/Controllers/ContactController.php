@@ -51,7 +51,7 @@ class ContactController extends Controller
          return response() ->json(['contact'=> $contact,201]);
      }
      public function getContact(){
-         $contacts = Contact::all();
+         $contacts = Contact::orderBy('id','DESC')->paginate(10);
          $response=[
              'contacts'=>$contacts
          ];

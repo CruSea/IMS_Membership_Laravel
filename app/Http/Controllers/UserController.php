@@ -12,6 +12,7 @@ class UserController extends Controller
 {
             public function  __construct(){
                   $this->middleware('is_Admin',['except'=>['signUserIn','getUser']]);
+
             }
    public function sign_user_up(Request $request){
 
@@ -65,7 +66,7 @@ class UserController extends Controller
     }
 
    public function getUser(){
-          $user = User::all();
+          $user = User::orderBy('id','DESC')->paginate(10);
 
           $response = [
               'users' => $user
@@ -116,7 +117,7 @@ class UserController extends Controller
                   $user-> fullname = $request->fullname;
                   $user->username =$request-> username;
                   $user->email =$request-> email;
-                  $user->password = $request->password;
+                  $user->password = bcrypt($request->password);
                   $user->phonenumber = $request->phonenumber;
                   $user->role_id =  $request->role_id;
                   $user->Account_status = $account_status;
@@ -139,5 +140,11 @@ class UserController extends Controller
               ];
               return response()->json($response ,200);
           }
+
+    public function DeleteUser($id){
+        $user = User:: find($id);
+        $user -> delete();
+        return response() -> json (['message'=> 'User Deleted!'],200);
+    }
 
 }
