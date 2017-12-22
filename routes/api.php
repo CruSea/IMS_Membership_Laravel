@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 
 //log user in
     Route:: post('/signin',[ 'uses' => 'UserController@signUserIn' ]);
+    Route:: put('/password',[ 'uses' => 'Change_PasswordController@change_password' ]);
 //routes for user registering
     Route:: post('/signup',[ 'uses' => 'UserController@sign_user_up' ]);
     Route:: get('/signup',[ 'uses' => 'UserController@getUser' ]);
@@ -50,6 +51,7 @@ use Illuminate\Http\Request;
     Route:: post('/Contact-image', [ 'uses' => 'imageController@store' ]);
   });
 //message routes
+Route::group(['middleware' => 'auth.jwt'], function () {
    Route:: get('/groups',[ 'uses'=>'MessageController@getGroup' ]);
    Route:: get('/group-message',[ 'uses'=>'MessageController@get_group_message' ]);
    Route:: post('/group-message',[ 'uses'=>'MessageController@send_group_message' ]);
@@ -58,12 +60,11 @@ use Illuminate\Http\Request;
    Route:: get('/contact-message',[ 'uses'=>'MessageController@get_contact_message' ]);
    Route:: delete('/group-message/{id}',[ 'uses'=>'MessageController@DeleteGroupMessage' ]);
    Route:: delete('/contact-message/{id}',[ 'uses'=>'MessageController@DeleteContactMessage' ]);
-//            Route:: post('/group-message',[
-//                'uses'=>'MessageController@send_message'
-//            ]);
-// dashboard
-
-Route:: get('/contact_count',[ 'uses'=>'DashboardController@get_contact_number' ]);
-Route:: get('/sent_count',[ 'uses'=>'DashboardController@sent_messages' ]);
-Route:: get('/received_count',[ 'uses'=>'DashboardController@recieved_messages' ]);
-//Route:: get('/member_count',[ 'uses'=>'ContactGroupController@group_contact_count' ]);
+});
+// dashboard routes
+Route::group(['middleware' => 'auth.jwt'], function () {
+        Route:: get('/contact_count',[ 'uses'=>'DashboardController@get_contact_number' ]);
+        Route:: get('/sent_count',[ 'uses'=>'DashboardController@sent_messages' ]);
+        Route:: get('/received_count',[ 'uses'=>'DashboardController@recieved_messages' ]);
+        //Route:: get('/member_count',[ 'uses'=>'ContactGroupController@group_contact_count' ]);
+});

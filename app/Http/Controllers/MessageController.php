@@ -11,6 +11,13 @@ use JWTAuth;
 
 class MessageController extends Controller
 {
+
+    public function  __construct(){
+        $this->middleware('is_Admin',['except'=>['getGroup', 'send_group_message','send_contact_message','get_group_message', 'get_contact_message','DeleteGroupMessage','DeleteContactMessage']]);
+        $this->middleware('is_Editor',['except'=>['get_group_message', 'get_contact_message']]);
+        $this->middleware('is_Viewer');
+
+    }
      public  function getGroup(){
          $groups = ContactGroup::all();
          $response=[
@@ -25,22 +32,12 @@ class MessageController extends Controller
             $group_message-> message = $request->input('message');
             $group_message-> group_id = $request->input('group_id');
             $group_message-> sent_by =  $user->fullname;
-
-            $group_message->save();
-
-//            if(){
-//                $status = 0;
-//            }
-//               $g = GroupMessage::where('group_id', $request->input('group_id'))->with('contact')->with('phonenumber');
-
-           $contacts = Contact::whereIn('id',groupDetail::where('group_id','=', $group_message-> group_id)->select('contact_id')->get() )->get();
-//        $sent_message=[];
-
-            for( $i = 0; $i < count($contacts); $i++) {
+           $group_message->save();
+        $contacts = Contact::whereIn('id',groupDetail::where('group_id','=', $group_message-> group_id)->select('contact_id')->get() )->get();
+           for( $i = 0; $i < count($contacts); $i++) {
 
                 $contact = $contacts[$i];
                 $sent_message = new SentMessages([
-
                     'message' => $request->input('message'),
                     'sent_to' => $contact->mobilenumber,
                     'status' => $status
@@ -87,8 +84,8 @@ class MessageController extends Controller
     }
 
     public function DeleteGroupMessage($id){
-        $grou_message = GroupMessage:: find($id);
-        $grou_message -> delete();
+        $group_message = GroupMessage:: find($id);
+        $group_message -> delete();
         return response() -> json (['message'=> 'Message Deleted!'],200);
     }
     public function DeleteContactMessage($id){

@@ -23,7 +23,7 @@ class is_Admin
                 $user = JWTAuth::toUser($token);
                 if ($user != null){
                     if($user instanceof User){
-                        if($user->role_id < 2  && $user->Account_status == true){
+                        if($user->role_id < 2  && $user->Account_status === 1){
                             return $next($request);
                         }
                         return response()->json(['error'=>'Insufficient Privilage!!'],400);

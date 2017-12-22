@@ -25,7 +25,7 @@ class is_Viewer
                 if ($user != null){
 
                     if($user instanceof User){
-                        if($user->role_id <= 3  && $user->Account_status == true){
+                        if($user->role_id <= 3  && $user->Account_status === 1){
                             return $next($request);
                         }
                         return response()->json(['error'=>'Insufficient Privilage!!'],400);

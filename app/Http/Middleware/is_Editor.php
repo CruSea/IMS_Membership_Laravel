@@ -25,7 +25,7 @@ class is_Editor
                 if ($user != null){
 //                    $user = User::where('user_id', $user->id)->first();
                     if($user instanceof User){
-                        if($user->role_id <= 2  && $user->Account_status == 1){
+                        if($user->role_id <= 2  && $user->Account_status === 1){
                             return $next($request);
                         }
                         return response()->json(['error'=>'Insufficient Privilage!!'],400);
